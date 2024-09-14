@@ -1,6 +1,44 @@
 import React from 'react';
+import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 export default function SignIn({log,setLog}){
+  const navigate = useNavigate();
+  var token_key = "";
+  const initialSignin = { password: "", email: ""};
+  const [logUser, setLogUser] = useState(initialSignin);
+
+  const handleLogin = async (e) => {
+  e.preventDefault()
+try {
+  const response = await axios.post("http://localhost:5000/User/logIn", {
+    email: logUser.email,
+    password: logUser.password,
+  });
+  if (response.status === 200) {
+    console.log(response);
+    console.log(response.data);
+    token_key = JSON.stringify(jwtDecode(response.data.token));
+    console.log(token_key);
+    localStorage.setItem("Token", token_key);
+  } else {
+    console.log("hey");
+  }
+ setLogUser(initialSignin);
+  alert("Logged in");
+  navigate("/dashboard");
+
+
+
+} catch (error) {
+  alert("Check Username or Password");
+  console.log(error);
+}
+}
+
+
 
     return(<>
        <div className=" h-screen w-full flex justify-center items-center">
@@ -13,7 +51,8 @@ export default function SignIn({log,setLog}){
         </div>
         <div className=" h-[65vh] md:h-[90vh] md:w-[35vw] w-[100vw] flex justify-center items-center ">
           <form
-            className="h-[50%] w-[80%] gap-6 rounded-lg shadow-[0_0_10px_2px_rgb(211,211,201)]  flex py-5 px-6 flex-col"
+          onSubmit={handleLogin}
+            className="h-[50%] [&>input]:px-2 w-[80%] gap-6 rounded-lg shadow-[0_0_10px_2px_rgb(211,211,201)]  flex py-5 px-6 flex-col"
             action=""
           >
             <div className="flex justify-between items-center">
@@ -26,9 +65,9 @@ export default function SignIn({log,setLog}){
             </div>
 
            
-            <input className="h-[40px] w-full border-b-2 rounded-sm border-slate-300" type="text" placeholder="Email" />
-            <input className="h-[40px] w-full border-b-2 rounded-sm border-slate-300" type="password" placeholder="Password" />
-            <button className="duration-200 h-[50px] rounded-xl text-white font-semibold w-full hover:text-[#491149] hover:bg-white hover:border  hover:border-[#491149] bg-[#491149]">Sign In</button>
+            <input onChange={(e)=>{setLogUser({...logUser, email:e.target.value})}} value={logUser.email} className="h-[40px] w-full border-b-2 rounded-sm border-slate-300" type="text" placeholder="Email" />
+            <input onChange={(e)=>{setLogUser({...logUser,password:e.target.value})}}  value={logUser.password} className="h-[40px] w-full border-b-2 rounded-sm border-slate-300" type="password" placeholder="Password" />
+            <button type='submit' className="duration-200 h-[50px] rounded-xl text-white font-semibold w-full hover:text-[#491149] hover:bg-white hover:border  hover:border-[#491149] bg-[#491149]">Sign In</button>
             <button onClick={()=>{setLog(!log);}} className="duration-200 h-[50px] rounded-xl text-[#491149] border hover:text-white hover:bg-[#491149] border-[#491149] font-semibold w-full bg-white">Sign Up</button>
 
 
