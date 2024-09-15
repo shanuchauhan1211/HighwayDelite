@@ -2,7 +2,7 @@
 import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Verification from './pages/Verfication';
+
 function App() {
   return (
     <>
@@ -10,7 +10,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Home/>}/>
         <Route path="/dashboard" element={<Dashboard/>}/>
-        <Route path="/verification" element={<Verification/>}/>
 
       </Routes>
     </BrowserRouter>

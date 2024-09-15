@@ -7,6 +7,7 @@ const AddUserSchema = new mongoose.Schema({
   lastname:{type:String , required:true,default:""},
   email: { type: String, required: true, default: "" },
   password: { type: String, required: true, default: "" },
+  verified:{type: Boolean ,default:false}
 });
 
 const AddUserModel = mongoose.model("AddUser", AddUserSchema);
