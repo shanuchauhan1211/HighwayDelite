@@ -129,6 +129,7 @@ const verifyOtp = async (req, res) => {
 
     const current = Date.now();
     if (otpUser.expireAt < current) {
+      await otpUser.deleteOne({userId:userId});
       return res.status(400).json({ message: "OTP has expired." });
     }
 
