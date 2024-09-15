@@ -102,6 +102,7 @@ const logIn = async (req, res) => {
           lastname: NewUser.lastname,
           email: NewUser.email,
           id: NewUser.id,
+          verified:NewUser.verified,
         },
         "test"
       );
@@ -114,8 +115,46 @@ const logIn = async (req, res) => {
 
 
 
+const verifyOtp = async (req, res) => {
+  try {
+    const { userId, otp} = req.body;
+    console.log(`id: ${userId} , otp: ${otp}`);
+    const otpUser = await UserotpModel.findOne({ userId:userId});
+
+    
+    if (!otpUser) {
+      return res.status(404).json({ message: "Invalid account, no OTP data found." });
+    }
+
+
+    const current = Date.now();
+    if (otpUser.expireAt < current) {
+      return res.status(400).json({ message: "OTP has expired." });
+    }
+
+    const isOTPCorrect = await bcrypt.compare(otp, otpUser.otp);
+    if (!isOTPCorrect) {
+      return res.status(400).json({ message: "Incorrect OTP!" });
+    }
+
+  
+    await AddUserModel.findByIdAndUpdate(userId, { verified: true });
+
+  
+    return res.status(200).json({ message: "OTP verified successfully, user is now verified." });
+    
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+
+
+
+
 export {
 CreateUser,
   logIn,
+  verifyOtp
 
 };

@@ -27,9 +27,16 @@ try {
     console.log("hey");
   }
  setLogUser(initialSignin);
-  alert("Logged in");
-  navigate("/dashboard");
 
+ if(response.data.token.verified === false)
+  {
+alert("Verify your email please");
+navigate("/");
+  }
+
+else{alert("Logged in");
+  navigate("/dashboard");
+}
 
 
 } catch (error) {

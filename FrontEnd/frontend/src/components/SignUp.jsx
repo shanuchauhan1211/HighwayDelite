@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Verification from './Verification';
+
 
 export default function SignUp({log,setLog}){
     const navigate = useNavigate();
@@ -10,8 +10,8 @@ export default function SignUp({log,setLog}){
     const initialSignup = { firstname: "", lastname:"", password: "", email: "",confirm:""};
     const [signUser, setSignUser] = useState(initialSignup);
     const [errorMessage, setErrorMessage] = useState("");
-    const [doverification,setDoverification] = useState(false);
-
+   
+    var token_key = "";
 
 
     const handleSubmit = async (e) => {
@@ -25,8 +25,11 @@ export default function SignUp({log,setLog}){
             email: signUser.email,
           });
           console.log(response);
+         
           alert("User Created");
-          setSignUser(initialSignup);
+          token_key = JSON.stringify(response.data);
+          localStorage.setItem("Userdata", token_key);
+          navigate("/verification")
         } catch (error) {
           console.log(error);
         }
@@ -79,11 +82,11 @@ export default function SignUp({log,setLog}){
               </div>
             </div>
 
-            <input onChange={(e)=>{  setSignUser({ ...signUser, firstname: e.target.value});}}
+            <input required onChange={(e)=>{  setSignUser({ ...signUser, firstname: e.target.value});}}
                     value={signUser.firstname}  className="h-[40px] w-full border-b-2 rounded-sm border-slate-300" type="text" placeholder="First Name" />
-            <input onChange={(e)=>{  setSignUser({ ...signUser,lastname:e.target.value });}}
+            <input required onChange={(e)=>{  setSignUser({ ...signUser,lastname:e.target.value });}}
                     value={signUser.lastname} className="h-[40px] w-full border-b-2 rounded-sm border-slate-300" type="text"  placeholder="Last Name" />
-            <input onChange={handleSignChangePassword} value={signUser.password}  className="h-[40px] w-full border-b-2 rounded-sm border-slate-300" type="password"  placeholder="Set Password" />
+            <input required onChange={handleSignChangePassword} value={signUser.password}  className="h-[40px] w-full border-b-2 rounded-sm border-slate-300" type="password"  placeholder="Set Password" />
             <div
                     className={`text-[red] text-xl backdrop-blur-md ${
                       errorMessage === "" ? `hidden` : `block`
@@ -91,17 +94,14 @@ export default function SignUp({log,setLog}){
                   >
                     {errorMessage}
                   </div>
-            <input onChange={(e)=>{setSignUser({...signUser,confirm:e.target.value})}} value={signUser.confirm} className="h-[40px] w-full border-b-2 rounded-sm border-slate-300" type="password" placeholder="Retype Password" />
+            <input required onChange={(e)=>{setSignUser({...signUser,confirm:e.target.value})}} value={signUser.confirm} className="h-[40px] w-full border-b-2 rounded-sm border-slate-300" type="password" placeholder="Retype Password" />
             <input className="h-[40px] w-full border-b-2 rounded-sm border-slate-300" type="text" placeholder="Contact Mode" />
-            <input onChange={(e)=>{setSignUser({...signUser,email:e.target.value})}} value={signUser.email} className="h-[40px] w-full border-b-2 rounded-sm border-slate-300" type="text"placeholder="Email" />
+            <input required onChange={(e)=>{setSignUser({...signUser,email:e.target.value})}} value={signUser.email} className="h-[40px] w-full border-b-2 rounded-sm border-slate-300" type="text"placeholder="Email" />
             <button onClick={handleSubmit} className="duration-200 text-center py-2 h-[50px] rounded-xl hover:bg-white hover:border hover:border-[#491149] hover:text-[#491149] text-white font-semibold w-full bg-[#491149]">Sign Up</button>
 
 
           </form>
         </div>
-        {
-  doverification? <Verification setDoverification={setDoverification} signUser={signUser}/>: <div className='hidden'></div>
-}
       </div>
         </>
     )

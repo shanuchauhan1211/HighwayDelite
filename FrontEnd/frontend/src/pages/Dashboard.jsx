@@ -13,9 +13,9 @@ console.log(data)
             </div>
             <div className='h-[50vh] md:h-[70vh] w-full flex flex-col  py-5 items-center'> 
                 <div className='h-[50%] md:h-[100%] w-[90%] flex flex-col justify-center items-center shadow-[0_0_10px_2px_rgb(211,211,201)]'>
-                    <p className='text-4xl  p-3'>Welcome,{data.firstname}{data.lastname}</p>
+                    <p className='text-2xl md:text-4xl  p-3'>Welcome,{data.firstname}{data.lastname}</p>
                    <div className='flex items-center gap-4 '>
-                    <p className='text-3xl font-bold'>Email:</p>
+                    <p className='text-xl md:text-3xl font-bold'>Email:</p>
                     <p className='text-xl'>{data.email}</p>
                     </div>
                 </div>
